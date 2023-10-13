@@ -20,7 +20,7 @@ def start_typing_test():
     entry.delete(0, "end")
     result_label.config(text="")
 
-    entry.bind("<Key>", handle_typing)
+    entry.bind("<Return>", handle_typing)
     start_time = time.time()
     start_button.config(state="disabled")
 
@@ -31,10 +31,11 @@ def handle_typing(event):
         return
 
     current_text = entry.get()
-    if current_text == sample_text:
-        end_time = time.time()
-        entry.unbind("<Key>")
-        calculate_scores(sample_text, current_text, start_time, end_time)
+    # if current_text == sample_text:
+    end_time = time.time()
+    entry.unbind("<Key>")
+
+    calculate_scores(sample_text, current_text, start_time, end_time)
 
 
 def calculate_scores(original_text, typed_text, start_time, end_time):
@@ -60,6 +61,8 @@ def count_errors(original_text, typed_text):
     for i in range(min_len):
         if original_text[i] != typed_text[i]:
             errors += 1
+    max_len = max(len(original_text), len(typed_text))
+    errors += max_len - min_len
     return errors
 
 
@@ -76,8 +79,8 @@ label.pack()
 text_display = tk.Label(window, text=sample_text)
 text_display.pack()
 
-entry = tk.Entry(window)
-entry.pack()
+entry = tk.Entry(window, width=50)
+entry.pack(ipady=10)
 
 start_button = tk.Button(window, text="Start Typing Test", command=start_typing_test)
 start_button.pack()
